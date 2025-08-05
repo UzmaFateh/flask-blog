@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ post.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 500px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+
+    <img src="{{ url_for('static', filename=post.image) }}" alt="{{ post.title }}">
+
+    <p>{{ post.para1 }}</p>
+    <p>{{ post.para2 }}</p>
+
+    <br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Blog Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Blog Post</h1>
+    <form method="POST">
+        <label>Title:</label>
+        <input type="text" name="title" required>
+
+        <label>Slug (e.g. my-first-post):</label>
+        <input type="text" name="slug" required>
+
+        <label>Image path (e.g. images/yourimage.jpg):</label>
+        <input type="text" name="image" required>
+
+        <label>Paragraph 1:</label>
+        <textarea name="para1" rows="5" required></textarea>
+
+        <label>Paragraph 2:</label>
+        <textarea name="para2" rows="5" required></textarea>
+
+        <button type="submit">Publish Post</button>
+    </form>
+
+    <br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

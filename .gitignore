@@ -1,0 +1,13 @@
+# Ignore instance folder (contains blog.db)
+instance/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+
+# Environment variables (if used later)
+.env
