@@ -1,5 +1,4 @@
 
-
 # import os
 # from datetime import datetime
 # from flask import Flask, render_template, request, redirect, url_for
@@ -32,6 +31,7 @@
 #     id = db.Column(db.Integer, primary_key=True)
 #     title = db.Column(db.String(150), nullable=False)
 #     slug = db.Column(db.String(150), unique=True, nullable=False)
+#     category = db.Column(db.String(100), nullable=False)  # ✅ New field
 #     content = db.Column(db.Text, nullable=False)
 #     image_filename = db.Column(db.String(100), nullable=True)
 #     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -61,6 +61,7 @@
 #     if request.method == 'POST':
 #         title = request.form['title']
 #         slug = request.form['slug']
+#         category = request.form['category']  # ✅ Get category
 #         content = request.form['content']
 #         image = request.files['image']
 
@@ -69,19 +70,25 @@
 #             image_filename = secure_filename(image.filename)
 #             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
-#         post = BlogPost(title=title, slug=slug, content=content, image_filename=image_filename)
+#         post = BlogPost(
+#             title=title,
+#             slug=slug,
+#             category=category,
+#             content=content,
+#             image_filename=image_filename
+#         )
 #         db.session.add(post)
 #         db.session.commit()
 #         return redirect(url_for('index'))
 
 #     return render_template('new_post.html')
 
-# # Post Detail Page (with comments and markdown)
+# # Post Detail Page
 # @app.route('/post/<slug>', methods=['GET', 'POST'])
 # def post_detail(slug):
 #     post = BlogPost.query.filter_by(slug=slug).first_or_404()
 
-#     # Handle new comment
+#     # Handle comment submit
 #     if request.method == 'POST':
 #         name = request.form['name']
 #         message = request.form['message']
@@ -90,10 +97,10 @@
 #         db.session.commit()
 #         return redirect(url_for('post_detail', slug=slug))
 
-#     # Render markdown content
+#     # Convert markdown to HTML
 #     content_html = markdown.markdown(post.content)
 
-#     # Fetch comments
+#     # Get comments
 #     comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.created_at.desc()).all()
 
 #     return render_template('post.html', post=post, content_html=content_html, comments=comments)
@@ -135,18 +142,16 @@ db = SQLAlchemy(app)
 # Models
 # ------------------------
 
-# BlogPost model
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     slug = db.Column(db.String(150), unique=True, nullable=False)
-    category = db.Column(db.String(100), nullable=False)  # ✅ New field
+    category = db.Column(db.String(100), nullable=False)  # ✅ category
     content = db.Column(db.Text, nullable=False)
     image_filename = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     comments = db.relationship('Comment', backref='post', lazy=True)
 
-# Comment model
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
@@ -158,19 +163,17 @@ class Comment(db.Model):
 # Routes
 # ------------------------
 
-# Home Page
 @app.route('/')
 def index():
     posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
     return render_template('index.html', posts=posts)
 
-# New Post Page
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
     if request.method == 'POST':
         title = request.form['title']
         slug = request.form['slug']
-        category = request.form['category']  # ✅ Get category
+        category = request.form['category']
         content = request.form['content']
         image = request.files['image']
 
@@ -192,7 +195,6 @@ def new_post():
 
     return render_template('new_post.html')
 
-# Post Detail Page
 @app.route('/post/<slug>', methods=['GET', 'POST'])
 def post_detail(slug):
     post = BlogPost.query.filter_by(slug=slug).first_or_404()
@@ -206,13 +208,15 @@ def post_detail(slug):
         db.session.commit()
         return redirect(url_for('post_detail', slug=slug))
 
-    # Convert markdown to HTML
     content_html = markdown.markdown(post.content)
-
-    # Get comments
     comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.created_at.desc()).all()
 
     return render_template('post.html', post=post, content_html=content_html, comments=comments)
+
+@app.route('/category/<category_name>')
+def posts_by_category(category_name):
+    posts = BlogPost.query.filter_by(category=category_name).order_by(BlogPost.created_at.desc()).all()
+    return render_template('category.html', posts=posts, category=category_name)
 
 # ------------------------
 # Run App

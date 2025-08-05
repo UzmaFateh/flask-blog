@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category: {{ category }} - My Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Posts in Category: {{ category }}</h1>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+    <hr>
+
+    {% if posts %}
+        {% for post in posts %}
+            <h2><a href="{{ url_for('post_detail', slug=post.slug) }}">{{ post.title }}</a></h2>
+            <p><strong>Category:</strong> {{ post.category }}</p>
+            {% if post.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+            {% endif %}
+            <p>{{ post.content.split()[:15] | join(' ') }}...</p>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No posts found in this category.</p>
+    {% endif %}
+</body>
+</html>

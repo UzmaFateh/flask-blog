@@ -11,7 +11,11 @@
     {% for post in posts %}
         
         <h2><a href="{{ url_for('post_detail', slug=post.slug) }}">{{ post.title }}</a></h2>
-        <p><strong>Category:</strong> {{ post.category }}</p>
+        <p><strong>Category:</strong> {{ post.category }}
+         <a href="{{ url_for('posts_by_category', category_name=post.category) }}">
+       {{ post.category }}
+        </a>
+    </p>
 
         <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" width="200">
         <p>{{ post.content.split()[:15] | join(' ') }}...</p>
