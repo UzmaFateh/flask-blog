@@ -1,26 +1,154 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ post.title }}</title>
+    <title>{{ post.title }} - My Blog</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h1 {
+            color: #333;
         }
         img {
-            max-width: 500px;
+            max-width: 600px;
             height: auto;
+            margin: 20px 0;
+        }
+        .content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
     <h1>{{ post.title }}</h1>
+    
+    {% if post.image_filename %}
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+    {% endif %}
 
-    <img src="{{ url_for('static', filename=post.image) }}" alt="{{ post.title }}">
+    <div class="content">
+        <p>{{ post.content | safe }}</p>
+    </div>
 
-    <p>{{ post.para1 }}</p>
-    <p>{{ post.para2 }}</p>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ post.title }} - My Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        img {
+            max-width: 600px;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        .content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .timestamp {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .comment-box,
+        .comment-list {
+            margin-top: 40px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        input[type="text"],
+        textarea {
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .comment {
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .comment .author {
+            font-weight: bold;
+        }
+
+        .comment .date {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{ post.title }}</h1>
+
+    <p class="timestamp">Posted on {{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }} |
+        <strong>Category:</strong> {{ post.category }}
+    </p>
+
+
+    {% if post.image_filename %}
+    <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+    {% endif %}
+
+    <div class="content">
+        {{ content_html | safe }}
+    </div>
+
+    <hr>
+
+    <!-- Comment Form -->
+    <div class="comment-box">
+        <h3>Leave a Comment</h3>
+        <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post">
+            <input type="text" name="name" placeholder="Your name" required><br>
+            <textarea name="message" placeholder="Your comment..." required></textarea><br>
+            <input type="submit" value="Post Comment">
+        </form>
+    </div>
+
+    <!-- Comment List -->
+    <div class="comment-list">
+        <h3>Comments ({{ comments|length }})</h3>
+        {% for comment in comments %}
+        <div class="comment">
+            <p class="author">{{ comment.name }}</p>
+            <p class="date">{{ comment.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            <p>{{ comment.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
 
     <br>
-    <a href="/">← Back to Home</a>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
 </body>
+
 </html>

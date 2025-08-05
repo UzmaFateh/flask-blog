@@ -1,66 +1,230 @@
+
+
+# import os
+# from datetime import datetime
+# from flask import Flask, render_template, request, redirect, url_for
+# from flask_sqlalchemy import SQLAlchemy
+# from werkzeug.utils import secure_filename
+# import markdown
+
+# app = Flask(__name__, instance_relative_config=True)
+
+# # Ensure instance folder exists
+# os.makedirs(app.instance_path, exist_ok=True)
+
+# # Configuration
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'blog.db')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# # Upload folder for images
+# UPLOAD_FOLDER = os.path.join('static', 'uploads')
+# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# db = SQLAlchemy(app)
+
+# # ------------------------
+# # Models
+# # ------------------------
+
+# # BlogPost model
+# class BlogPost(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(150), nullable=False)
+#     slug = db.Column(db.String(150), unique=True, nullable=False)
+#     content = db.Column(db.Text, nullable=False)
+#     image_filename = db.Column(db.String(100), nullable=True)
+#     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+#     comments = db.relationship('Comment', backref='post', lazy=True)
+
+# # Comment model
+# class Comment(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
+#     name = db.Column(db.String(100), nullable=False)
+#     message = db.Column(db.Text, nullable=False)
+#     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# # ------------------------
+# # Routes
+# # ------------------------
+
+# # Home Page
+# @app.route('/')
+# def index():
+#     posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
+#     return render_template('index.html', posts=posts)
+
+# # New Post Page
+# @app.route('/new', methods=['GET', 'POST'])
+# def new_post():
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         slug = request.form['slug']
+#         content = request.form['content']
+#         image = request.files['image']
+
+#         image_filename = None
+#         if image and image.filename != '':
+#             image_filename = secure_filename(image.filename)
+#             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+#         post = BlogPost(title=title, slug=slug, content=content, image_filename=image_filename)
+#         db.session.add(post)
+#         db.session.commit()
+#         return redirect(url_for('index'))
+
+#     return render_template('new_post.html')
+
+# # Post Detail Page (with comments and markdown)
+# @app.route('/post/<slug>', methods=['GET', 'POST'])
+# def post_detail(slug):
+#     post = BlogPost.query.filter_by(slug=slug).first_or_404()
+
+#     # Handle new comment
+#     if request.method == 'POST':
+#         name = request.form['name']
+#         message = request.form['message']
+#         comment = Comment(post_id=post.id, name=name, message=message)
+#         db.session.add(comment)
+#         db.session.commit()
+#         return redirect(url_for('post_detail', slug=slug))
+
+#     # Render markdown content
+#     content_html = markdown.markdown(post.content)
+
+#     # Fetch comments
+#     comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.created_at.desc()).all()
+
+#     return render_template('post.html', post=post, content_html=content_html, comments=comments)
+
+# # ------------------------
+# # Run App
+# # ------------------------
+
+# if __name__ == '__main__':
+#     with app.app_context():
+#         db.create_all()
+#     app.run(debug=True)
+
+
+import os
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+import markdown
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 
-# 🔌 Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+# Ensure instance folder exists
+os.makedirs(app.instance_path, exist_ok=True)
+
+# Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'blog.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# 🔧 Initialize database
+# Upload folder for images
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = SQLAlchemy(app)
 
-# 📦 BlogPost model
+# ------------------------
+# Models
+# ------------------------
+
+# BlogPost model
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    slug = db.Column(db.String(100), unique=True, nullable=False)
-    image = db.Column(db.String(200), nullable=False)
-    para1 = db.Column(db.Text, nullable=False)
-    para2 = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(150), nullable=False)
+    slug = db.Column(db.String(150), unique=True, nullable=False)
+    category = db.Column(db.String(100), nullable=False)  # ✅ New field
+    content = db.Column(db.Text, nullable=False)
+    image_filename = db.Column(db.String(100), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    comments = db.relationship('Comment', backref='post', lazy=True)
 
-# 🧱 Create tables (if not exist)
-with app.app_context():
-    db.create_all()
+# Comment model
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# 🏠 Home page route
+# ------------------------
+# Routes
+# ------------------------
+
+# Home Page
 @app.route('/')
-def home():
-    posts = BlogPost.query.all()
-    return render_template('home.html', posts=posts)
+def index():
+    posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
+    return render_template('index.html', posts=posts)
 
-# 📄 Slug detail page
-@app.route('/post/<slug>')
-def post(slug):
-    post = BlogPost.query.filter_by(slug=slug).first_or_404()
-    return render_template('post.html', post=post)
-
-# ➕ Add new post (form page)
+# New Post Page
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
     if request.method == 'POST':
         title = request.form['title']
         slug = request.form['slug']
-        image = request.form['image']
-        para1 = request.form['para1']
-        para2 = request.form['para2']
+        category = request.form['category']  # ✅ Get category
+        content = request.form['content']
+        image = request.files['image']
 
-        new_post = BlogPost(
+        image_filename = None
+        if image and image.filename != '':
+            image_filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+        post = BlogPost(
             title=title,
             slug=slug,
-            image=image,
-            para1=para1,
-            para2=para2
+            category=category,
+            content=content,
+            image_filename=image_filename
         )
-        db.session.add(new_post)
+        db.session.add(post)
         db.session.commit()
-
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     return render_template('new_post.html')
 
-# 🚀 Run the app
+# Post Detail Page
+@app.route('/post/<slug>', methods=['GET', 'POST'])
+def post_detail(slug):
+    post = BlogPost.query.filter_by(slug=slug).first_or_404()
+
+    # Handle comment submit
+    if request.method == 'POST':
+        name = request.form['name']
+        message = request.form['message']
+        comment = Comment(post_id=post.id, name=name, message=message)
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('post_detail', slug=slug))
+
+    # Convert markdown to HTML
+    content_html = markdown.markdown(post.content)
+
+    # Get comments
+    comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.created_at.desc()).all()
+
+    return render_template('post.html', post=post, content_html=content_html, comments=comments)
+
+# ------------------------
+# Run App
+# ------------------------
+
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
+
+
+
+
 
 

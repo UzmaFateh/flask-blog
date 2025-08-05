@@ -1,49 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add New Blog Post</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        textarea, input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 15px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-    </style>
+    <title>Create New Post</title>
 </head>
 <body>
-    <h1>Add New Blog Post</h1>
-    <form method="POST">
-        <label>Title:</label>
-        <input type="text" name="title" required>
+    <h1>Create New Blog Post</h1>
+    <form action="{{ url_for('new_post') }}" method="post" enctype="multipart/form-data">
+        <label>Title:</label><br>
+        <input type="text" name="title" required><br><br>
 
-        <label>Slug (e.g. my-first-post):</label>
-        <input type="text" name="slug" required>
+        <label>Slug (URL):</label><br>
+        <input type="text" name="slug" required><br><br>
 
-        <label>Image path (e.g. images/yourimage.jpg):</label>
-        <input type="text" name="image" required>
+        <label>Category:</label><br>
+        <input type="text" name="category" required><br><br>
 
-        <label>Paragraph 1:</label>
-        <textarea name="para1" rows="5" required></textarea>
 
-        <label>Paragraph 2:</label>
-        <textarea name="para2" rows="5" required></textarea>
+        <label>Content:</label><br>
+        <textarea name="content" rows="5" cols="40" required></textarea><br><br>
 
-        <button type="submit">Publish Post</button>
+        <label>Image:</label><br>
+        <input type="file" name="image" required><br><br>
+
+        <input type="submit" value="Create Post">
     </form>
 
-    <br>
-    <a href="/">← Back to Home</a>
+       <br>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
 </body>
 </html>
+
