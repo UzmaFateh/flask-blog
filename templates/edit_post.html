@@ -1,0 +1,132 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+</head>
+<body>
+    <h1>Edit Post</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Title:</label>
+        <input type="text" name="title" value="{{ post.title }}" required><br>
+
+        <label>Slug:</label>
+        <input type="text" name="slug" value="{{ post.slug }}" required><br>
+
+        <label>Category:</label>
+        <input type="text" name="category" value="{{ post.category }}" required><br>
+
+        <label>Content:</label><br>
+        <textarea name="content" rows="6" cols="50" required>{{ post.content }}</textarea><br>
+
+        <label>Image:</label>
+        {% if post.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" width="100"><br>
+        {% endif %}
+        <input type="file" name="image"><br><br>
+
+        <button type="submit">Update Post</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 0;
+            margin: 0;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: red;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #28a745;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Edit Post</h1>
+        <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    </header>
+
+    <main>
+        <form method="POST">
+            <label>Title:</label>
+            <input type="text" name="title" value="{{ post.title }}" required>
+
+            <label>Category:</label>
+            <input type="text" name="category" value="{{ post.category }}" required>
+            
+        
+
+            <label>Content:</label>
+            <textarea name="content" required>{{ post.content }}</textarea>
+
+            <button type="submit">Update Post</button>
+        </form>
+    </main>
+
+</body>
+
+</html>
