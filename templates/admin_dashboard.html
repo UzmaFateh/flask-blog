@@ -154,11 +154,13 @@
             margin-right: 5px;
         }
 
-        .edit-btn {
+        .edit-btn, 
+        .approve-btn {
             background: #28a745;
         }
 
-        .delete-btn {
+        .delete-btn , 
+        .btn-warning {
             background: #dc3545;
         }
     </style>
@@ -187,6 +189,8 @@
                     <th>Category</th>
                     <th>Date Created</th>
                     <th>Actions</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -205,6 +209,17 @@
                         <a href="{{ url_for('delete_post', post_id=post.id) }}" class="delete-btn"
                             onclick="return confirm('Are you sure?');">Delete</a>
                     </td>
+                    <td>{{ post.status }}</td>
+                     <td class="actions">
+                    {% if post.status != 'Approved' %}
+                    <a href="{{ url_for('approve_post', post_id=post.id) }}" class= "approve-btn">Approve</a>
+                    {% else %}
+                    Approved
+                    {% endif %}
+
+                     <a href="{{ url_for('reject_post', post_id=post.id) }}" class="btn btn-warning">Reject</a>
+
+                </td>
                 </tr>
                 {% else %}
                 <tr>
@@ -214,7 +229,7 @@
             </tbody>
         </table>
 
-
+<!-- 
         <table>
             <tr>
                 <th>Title</th>
@@ -233,10 +248,17 @@
                     Approved
                     {% endif %}
 
+                     
+
                 </td>
+                <td>
+
+                    <a href="{{ url_for('reject_post', post_id=post.id) }}" class="btn btn-warning">Reject</a>
+                </td>
+
             </tr>
             {% endfor %}
-        </table>
+        </table> -->
 
     </main>
     <br>

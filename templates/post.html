@@ -1,48 +1,4 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>{{ post.title }} - My Blog</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-        h1 {
-            color: #333;
-        }
-        img {
-            max-width: 600px;
-            height: auto;
-            margin: 20px 0;
-        }
-        .content {
-            font-size: 18px;
-            line-height: 1.6;
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            color: #4CAF50;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-    <h1>{{ post.title }}</h1>
-    
-    {% if post.image_filename %}
-        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
-    {% endif %}
-
-    <div class="content">
-        <p>{{ post.content | safe }}</p>
-    </div>
-
-    <a href="{{ url_for('index') }}">← Back to Home</a>
-</body>
-</html> -->
-
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 
 <head>
@@ -123,20 +79,20 @@
         {{ content_html | safe }}
     </div>
 
-    <hr>
+    <hr> -->
 
-    <!-- Comment Form -->
-    <div class="comment-box">
+     <!-- Comment Form  -->
+    <!-- <div class="comment-box">
         <h3>Leave a Comment</h3>
         <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post">
             <input type="text" name="name" placeholder="Your name" required><br>
             <textarea name="message" placeholder="Your comment..." required></textarea><br>
             <input type="submit" value="Post Comment">
         </form>
-    </div>
+    </div> -->
 
     <!-- Comment List -->
-    <div class="comment-list">
+    <!-- <div class="comment-list">
         <h3>Comments ({{ comments|length }})</h3>
         {% for comment in comments %}
         <div class="comment">
@@ -151,4 +107,264 @@
     <a href="{{ url_for('index') }}">← Back to Home</a>
 </body>
 
+</html>  -->
+
+<!-- ############################################################################################
+########################################################################################### -->
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ post.title }} - My Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        img {
+            max-width: 600px;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        .content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .timestamp {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .comment-box,
+        .comment-list {
+            margin-top: 40px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        input[type="text"],
+        textarea {
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .comment {
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .comment .author {
+            font-weight: bold;
+        }
+
+        .comment .date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .share-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .share-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{ post.title }}</h1>
+
+    <p class="timestamp">Posted on {{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }} |
+        <strong>Category:</strong> {{ post.category }}
+    </p> -->
+
+    <!-- Share Button -->
+    <!-- <button class="share-btn"
+        data-title="{{ post.title }}"
+        data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
+        📢 Share
+    </button>
+
+    {% if post.image_filename %}
+    <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+    {% endif %}
+
+    <div class="content">
+        {{ content_html | safe }}
+    </div>
+
+    <hr> -->
+
+    <!-- Comment Form -->
+    <!-- <div class="comment-box">
+        <h3>Leave a Comment</h3>
+        <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post">
+            <input type="text" name="name" placeholder="Your name" required><br>
+            <textarea name="message" placeholder="Your comment..." required></textarea><br>
+            <input type="submit" value="Post Comment">
+        </form>
+    </div> -->
+
+    <!-- Comment List -->
+    <!-- <div class="comment-list">
+        <h3>Comments ({{ comments|length }})</h3>
+        {% for comment in comments %}
+        <div class="comment">
+            <p class="author">{{ comment.name }}</p>
+            <p class="date">{{ comment.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            <p>{{ comment.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const shareBtn = document.querySelector(".share-btn");
+            if (shareBtn) {
+                shareBtn.addEventListener("click", function () {
+                    const title = this.dataset.title;
+                    const url = this.dataset.url;
+
+                    if (navigator.share) {
+                        navigator.share({
+                            title: title,
+                            url: url
+                        }).catch(err => console.log("Share failed:", err));
+                    } else {
+                        navigator.clipboard.writeText(url);
+                        alert("Link copied to clipboard!");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }} - My Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Post Title -->
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">{{ post.title }}</h1>
+
+        <!-- Timestamp + Category -->
+        <p class="text-xs sm:text-sm text-gray-500 mb-4">
+            Posted on {{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }} |
+            <span class="font-semibold">Category:</span>
+            <span class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-medium px-2 py-1 rounded">
+                {{ post.category }}
+            </span>
+        </p>
+
+        <!-- Share Button -->
+        <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-md flex items-center gap-2 mb-6 share-btn"
+            data-title="{{ post.title }}"
+            data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
+            📢 <span>Share</span>
+        </button>
+
+        <!-- Post Image -->
+        {% if post.image_filename %}
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+            alt="{{ post.title }}"
+            class="w-full sm:w-4/5 lg:w-2/3 mx-auto rounded-lg shadow-md mb-6 object-cover">
+        {% endif %}
+
+        <!-- Post Content -->
+        <div class="prose max-w-none prose-sm sm:prose lg:prose-lg mb-8">
+            {{ content_html | safe }}
+        </div>
+
+        <hr class="my-8 border-gray-300">
+
+        <!-- Comment Form -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-4">Leave a Comment</h3>
+            <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post" class="space-y-4">
+                <input type="text" name="name" placeholder="Your name" required
+                    class="w-full border border-gray-300 rounded-md p-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <textarea name="message" placeholder="Your comment..." required
+                    class="w-full border border-gray-300 rounded-md p-2 h-28 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+                <input type="submit" value="Post Comment"
+                    class="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base px-4 py-2 rounded-md cursor-pointer">
+            </form>
+        </div>
+
+        <!-- Comment List -->
+        <div>
+            <h3 class="text-lg font-semibold mb-4">Comments ({{ comments|length }})</h3>
+            {% for comment in comments %}
+            <div class="border-t border-gray-200 py-4">
+                <p class="font-semibold text-sm sm:text-base">{{ comment.name }}</p>
+                <p class="text-[10px] sm:text-xs text-gray-500 mb-1">{{ comment.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <p class="text-gray-700 text-sm sm:text-base">{{ comment.message }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Back to Home -->
+        <div class="mt-8">
+            <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline text-sm sm:text-base">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const shareBtn = document.querySelector(".share-btn");
+            if (shareBtn) {
+                shareBtn.addEventListener("click", function () {
+                    const title = this.dataset.title;
+                    const url = this.dataset.url;
+
+                    if (navigator.share) {
+                        navigator.share({
+                            title: title,
+                            url: url
+                        }).catch(err => console.log("Share failed:", err));
+                    } else {
+                        navigator.clipboard.writeText(url);
+                        alert("Link copied to clipboard!");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
 </html>
+
