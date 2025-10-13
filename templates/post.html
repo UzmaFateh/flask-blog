@@ -81,8 +81,8 @@
 
     <hr> -->
 
-     <!-- Comment Form  -->
-    <!-- <div class="comment-box">
+<!-- Comment Form  -->
+<!-- <div class="comment-box">
         <h3>Leave a Comment</h3>
         <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post">
             <input type="text" name="name" placeholder="Your name" required><br>
@@ -91,8 +91,8 @@
         </form>
     </div> -->
 
-    <!-- Comment List -->
-    <!-- <div class="comment-list">
+<!-- Comment List -->
+<!-- <div class="comment-list">
         <h3>Comments ({{ comments|length }})</h3>
         {% for comment in comments %}
         <div class="comment">
@@ -198,8 +198,8 @@
         <strong>Category:</strong> {{ post.category }}
     </p> -->
 
-    <!-- Share Button -->
-    <!-- <button class="share-btn"
+<!-- Share Button -->
+<!-- <button class="share-btn"
         data-title="{{ post.title }}"
         data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
         📢 Share
@@ -215,8 +215,8 @@
 
     <hr> -->
 
-    <!-- Comment Form -->
-    <!-- <div class="comment-box">
+<!-- Comment Form -->
+<!-- <div class="comment-box">
         <h3>Leave a Comment</h3>
         <form action="{{ url_for('post_detail', slug=post.slug) }}" method="post">
             <input type="text" name="name" placeholder="Your name" required><br>
@@ -225,8 +225,8 @@
         </form>
     </div> -->
 
-    <!-- Comment List -->
-    <!-- <div class="comment-list">
+<!-- Comment List -->
+<!-- <div class="comment-list">
         <h3>Comments ({{ comments|length }})</h3>
         {% for comment in comments %}
         <div class="comment">
@@ -284,22 +284,23 @@
         <p class="text-xs sm:text-sm text-gray-500 mb-4">
             Posted on {{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }} |
             <span class="font-semibold">Category:</span>
-            <span class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-medium px-2 py-1 rounded">
+            <a href="{{ url_for('posts_by_category', category_name=post.category) }}" <span
+                class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-medium px-2 py-1 rounded">
                 {{ post.category }}
-            </span>
+                </span>
+            </a>
         </p>
 
         <!-- Share Button -->
-        <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-md flex items-center gap-2 mb-6 share-btn"
-            data-title="{{ post.title }}"
-            data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
+        <button
+            class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-md flex items-center gap-2 mb-6 share-btn"
+            data-title="{{ post.title }}" data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
             📢 <span>Share</span>
         </button>
 
         <!-- Post Image -->
         {% if post.image_filename %}
-        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
-            alt="{{ post.title }}"
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}"
             class="w-full sm:w-4/5 lg:w-2/3 mx-auto rounded-lg shadow-md mb-6 object-cover">
         {% endif %}
 
@@ -331,7 +332,8 @@
             {% for comment in comments %}
             <div class="border-t border-gray-200 py-4">
                 <p class="font-semibold text-sm sm:text-base">{{ comment.name }}</p>
-                <p class="text-[10px] sm:text-xs text-gray-500 mb-1">{{ comment.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <p class="text-[10px] sm:text-xs text-gray-500 mb-1">{{ comment.created_at.strftime('%B %d, %Y at %I:%M
+                    %p') }}</p>
                 <p class="text-gray-700 text-sm sm:text-base">{{ comment.message }}</p>
             </div>
             {% endfor %}
@@ -339,7 +341,8 @@
 
         <!-- Back to Home -->
         <div class="mt-8">
-            <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline text-sm sm:text-base">← Back to Home</a>
+            <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline text-sm sm:text-base">← Back to
+                Home</a>
         </div>
     </div>
 
@@ -367,4 +370,3 @@
 </body>
 
 </html>
-

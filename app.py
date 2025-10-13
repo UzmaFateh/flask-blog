@@ -1023,6 +1023,8 @@ class BlogPost(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     comments = db.relationship('Comment', backref='post', lazy=True)
     status = db.Column(db.String(20), default='Pending')
+    # views = db.Column(db.Integer, default=0)
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -1042,18 +1044,61 @@ class User(db.Model):
 # ------------------------
 # Routes
 # ------------------------
-@app.route('/')
-def index():
-    posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).all()
-    return render_template('index.html', posts=posts)
-
-#####################################app route with category########################3
 # @app.route('/')
 # def index():
-#     categories = ["Tech", "Lifestyle", "Travel", "Food", "Enjoy"]  # ya DB se fetch karo
 #     posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).all()
-#     return render_template('index.html', posts=posts, categories=categories)
+#     return render_template('index.html', posts=posts)
+
+#####################################app route with category########################3
+@app.route('/')
+def index():
+    categories = ["Technology", "Lifestyle", "Travel", "Food", "Health"]  # ya DB se fetch karo
+    posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).all()
+    return render_template('index.html', posts=posts, categories=categories)
 ########################################ends###########################################3
+
+# @app.route('/new', methods=['GET', 'POST'])
+# def new_post():
+#     if 'user_id' not in session:
+#         return redirect(url_for('login'))
+#     if session.get('role') != 'user':
+#         return "Only users can create posts."
+    
+    
+
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         slug = request.form['slug']
+#         category = request.form['category']
+#         content = request.form['content']
+#         image = request.files['image']
+
+#         image_filename = None
+#         if image and image.filename != '':
+#             image_filename = secure_filename(image.filename)
+#             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+#         post = BlogPost(
+#             user_id=session['user_id'],  # <-- Added
+#             title=title,
+#             slug=slug,
+#             category=category,
+#             content=content,
+#             image_filename=image_filename
+#         )
+#         db.session.add(post)
+#         db.session.commit()
+
+#         # Send submission email
+#         user_email = User.query.get(session['user_id']).email
+#         send_post_submission_email(user_email, title)
+
+#         flash('Your post has been submitted for review!', 'info')
+#         return redirect(url_for('index'))
+
+    # return render_template('new_post.html')
+
+
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
@@ -1061,6 +1106,9 @@ def new_post():
         return redirect(url_for('login'))
     if session.get('role') != 'user':
         return "Only users can create posts."
+
+    # Pre-defined categories list
+    categories = ["Technology", "Health", "Travel", "Food", "Education"]
 
     if request.method == 'POST':
         title = request.form['title']
@@ -1075,7 +1123,7 @@ def new_post():
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
         post = BlogPost(
-            user_id=session['user_id'],  # <-- Added
+            user_id=session['user_id'],
             title=title,
             slug=slug,
             category=category,
@@ -1092,7 +1140,9 @@ def new_post():
         flash('Your post has been submitted for review!', 'info')
         return redirect(url_for('index'))
 
-    return render_template('new_post.html')
+    # Pass categories list to template
+    return render_template('new_post.html', categories=categories)
+
 
 @app.route('/post/<slug>', methods=['GET', 'POST'])
 def post_detail(slug):
