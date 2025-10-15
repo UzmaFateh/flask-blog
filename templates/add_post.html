@@ -86,10 +86,15 @@
 </html> -->
 
 
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add New Post</title>
+
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -148,6 +153,12 @@
 </head>
 <body>
 
+    {% extends "base.html" %}
+{% block content %}
+<!-- Page content here -->
+
+
+
 <header>
     <h1>Add New Post</h1>
     <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
@@ -175,6 +186,8 @@
     </form>
 </main>
 
+
+{% endblock %}
 </body>
 </html>
 

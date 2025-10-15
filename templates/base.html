@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "My Blog" }}</title>
+
+    <!-- ✅ Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ✅ Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" />
+
+    <!-- ✅ Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+
+  <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+    <!-- ✅ Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- ✅ Page-specific content -->
+    <main class="flex-grow">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- ✅ Footer -->
+    {% include 'footer.html' %}
+ 
+
+
+    <!-- ✅ Optional JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

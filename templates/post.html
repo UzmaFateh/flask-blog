@@ -265,6 +265,9 @@
 
 </html> -->
 
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -275,6 +278,10 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800">
+    {% extends "base.html" %}
+{% block content %}
+<!-- Page content here -->
+
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Post Title -->
@@ -367,6 +374,8 @@
             }
         });
     </script>
+    {% endblock %}
+
 </body>
 
 </html>

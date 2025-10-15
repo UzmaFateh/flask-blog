@@ -1,93 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <title>Admin Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        a.button {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        a.button.delete {
-            background-color: #dc3545;
-        }
-
-        a.button:hover {
-            opacity: 0.8;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>Admin Dashboard</h1>
-    <p>Welcome, Admin! Here are all blog posts:</p>
-
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Date Created</th>
-            <th>Actions</th>
-        </tr>
-        {% for post in posts %}
-        <tr>
-            <td>{{ post.title }}</td>
-            <td>{{ post.category }}</td>
-            <td>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-            <td>
-                <a class="button" href="{{ url_for('post_detail', slug=post.slug) }}">View</a>
-
-                <a class="button" href="{{ url_for('edit_post', post_id=post.id) }}">Edit</a>
-                <a class="button delete" href="{{ url_for('delete_post', post_id=post.id) }}"
-                    onclick="return confirm('Are you sure?')">Delete</a>
-                <div style="text-align: right; margin-bottom: 10px;">
-    <a href="{{ url_for('logout') }}" style="padding:8px 15px; background:red; color:white; text-decoration:none; border-radius:4px;">
-        Logout
-    </a>
-</div>
-
-
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <br>
-    <a class="button" href="{{ url_for('index') }}">Back to Blog</a>
-</body>
-
-</html> -->
 
 <!DOCTYPE html>
 <html>
@@ -154,19 +64,51 @@
             margin-right: 5px;
         }
 
-        .edit-btn, 
-        .approve-btn {
+
+        .view-btn{
+            background-color: #5e71dc;
+        }
+
+        .edit-btn
+         {
+            background: orange;
+        }
+
+        .approve-btn{
+            background-color: #28a745;
+        }
+
+        .delete-btn,
+        .btn-warning {
+            background: #dc3545;
+        }
+
+        /* ✅ Status Badge Styles */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-approved {
             background: #28a745;
         }
 
-        .delete-btn , 
-        .btn-warning {
+        .status-pending {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .status-rejected {
             background: #dc3545;
         }
     </style>
 </head>
 
 <body>
+    {% extends "base.html" %}
+    {% block content %}
 
     <header>
         <a href="{{ url_for('add_post') }}"
@@ -190,7 +132,7 @@
                     <th>Date Created</th>
                     <th>Actions</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Editor's Pick</th>
                 </tr>
             </thead>
             <tbody>
@@ -200,72 +142,68 @@
                     <td>{{ post.title }}</td>
                     <td>{{ post.category }}</td>
                     <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+
                     <td class="actions">
-                        {% if post.status != 'Approved' %}
-                        <a href="{{ url_for('approve_post', post_id=post.id) }}">Approve</a>
-                        {% endif %}
-                        <a href="{{ url_for('post_detail', slug=post.slug) }}" class="edit-btn">View</a>
+                        <a href="{{ url_for('post_detail', slug=post.slug) }}" class="view-btn">View</a>
                         <a href="{{ url_for('edit_post', post_id=post.id) }}" class="edit-btn">Edit</a>
                         <a href="{{ url_for('delete_post', post_id=post.id) }}" class="delete-btn"
                             onclick="return confirm('Are you sure?');">Delete</a>
+
+                        {% if post.status != 'Approved' %}
+                        <a href="{{ url_for('approve_post', post_id=post.id) }}" class="approve-btn">Approve</a>
+                        {% endif %}
+                        <a href="{{ url_for('reject_post', post_id=post.id) }}" class="btn btn-warning">Reject</a>
                     </td>
-                    <td>{{ post.status }}</td>
-                     <td class="actions">
-                    {% if post.status != 'Approved' %}
-                    <a href="{{ url_for('approve_post', post_id=post.id) }}" class= "approve-btn">Approve</a>
-                    {% else %}
-                    Approved
-                    {% endif %}
 
-                     <a href="{{ url_for('reject_post', post_id=post.id) }}" class="btn btn-warning">Reject</a>
+                    <!-- ✅ Color Coded Status Badge -->
+                    <td>
+                        {% if post.status == 'Approved' %}
+                        <span class="status-badge status-approved">Approved</span>
+                        {% elif post.status == 'Pending' %}
+                        <span class="status-badge status-pending">Pending</span>
+                        {% else %}
+                        <span class="status-badge status-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
 
-                </td>
+                    <!-- ✅ Editor's Pick Checkbox -->
+                    <td>
+                        <input type="checkbox" {% if post.is_editors_pick %}checked{% endif %}
+                            onchange="toggleEditorsPick('{{ post.id }}', this.checked)">
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="5">No posts available.</td>
+                    <td colspan="7">No posts available.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-<!-- 
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            {% for post in posts %}
-            <tr>
-                <td>{{ post.title }}</td>
-                <td>{{ post.status }}</td>
-
-                <td>
-                    {% if post.status != 'Approved' %}
-                    <a href="{{ url_for('approve_post', post_id=post.id) }}">Approve</a>
-                    {% else %}
-                    Approved
-                    {% endif %}
-
-                     
-
-                </td>
-                <td>
-
-                    <a href="{{ url_for('reject_post', post_id=post.id) }}" class="btn btn-warning">Reject</a>
-                </td>
-
-            </tr>
-            {% endfor %}
-        </table> -->
-
     </main>
+
     <br>
     <a class="button" href="{{ url_for('index') }}"
-        style="padding:8px 15px; background:green; color:white; text-decoration:none; border-radius:4px;">Back to
-        Blog</a>
+        style="padding:8px 15px; background:green; color:white; text-decoration:none; border-radius:4px;">
+        Back to Blog
+    </a>
 
+    <script>
+        function toggleEditorsPick(postId, isChecked) {
+            fetch(`/toggle_editors_pick/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ is_editors_pick: isChecked })
+            })
+                .then(response => response.json())
+                .then(data => console.log('Editor pick updated:', data))
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    {% endblock %}
 </body>
 
 </html>
+

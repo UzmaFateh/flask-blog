@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar</title>
+</head>
+
+<body>
+  <nav class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg overflow-visible">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a href="{{ url_for('index') }}" class="text-2xl font-bold text-white">My Blog</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="menu-btn" class="sm:hidden text-white focus:outline-none text-2xl">☰</button>
+
+      <!-- Desktop Navigation Links -->
+      <ul id="menu" class="hidden sm:flex space-x-6 text-white font-medium items-center mx-auto">
+        <li><a href="{{ url_for('index') }}" class="hover:text-yellow-300">Home</a></li>
+        <li><a href="{{ url_for('all_posts') }}" class="hover:text-yellow-300">All Posts</a></li>
+
+        <!-- Categories Dropdown -->
+        <li class="relative">
+          <button id="categoriesBtn" class="hover:text-yellow-300 focus:outline-none flex items-center space-x-1">
+            <span>Categories</span>
+            <svg id="categoriesArrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="categoriesMenu" class="absolute left-0 top-full mt-1 w-40 bg-white text-gray-800 rounded-lg shadow-lg z-50 hidden">
+            {% for category in categories %}
+            <li>
+              <a href="{{ url_for('posts_by_category', category_name=category) }}" class="block px-4 py-2 hover:bg-indigo-100">
+                {{ category }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+
+        <li>
+          <a href="{{ url_for('editors_picks') }}" class="hover:text-yellow-300 {% if request.endpoint == 'editors_picks' %}text-yellow-300{% endif %}">
+            Editor’s Picks
+          </a>
+        </li>
+
+        <li><a href="{{ url_for('about') }}" class="hover:text-yellow-300">About</a></li>
+      </ul>
+
+      <!-- Right: User Links -->
+      <ul class="hidden sm:flex space-x-4 text-white font-medium items-center ">
+        {% if not session.get('user_id') %}
+        <li><a href="{{ url_for('login') }}" class="hover:text-yellow-300">Login</a></li>
+        <li><a href="{{ url_for('signup') }}" class="hover:text-yellow-300">Sign Up</a></li>
+        {% else %}
+        {% if session.get('role') == 'user' %}
+        <li><a href="{{ url_for('new_post') }}" class="hover:text-yellow-300">Create Post</a></li>
+        {% elif session.get('role') == 'editor' %}
+        <li><a href="{{ url_for('editor_dashboard') }}" class="hover:text-yellow-300">Editor Dashboard</a></li>
+        {% elif session.get('role') == 'admin' %}
+        <li><a href="{{ url_for('admin_dashboard') }}" class="hover:text-yellow-300">Admin Dashboard</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}" class="text-red-200 hover:text-red-400">Logout</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="sm:hidden hidden bg-indigo-700 text-white text-left py-4 px-2 space-y-2 text-center">
+      <a href="{{ url_for('index') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">Home</a>
+      <a href="{{ url_for('all_posts') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">All Posts</a>
+      <a href="{{ url_for('about') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">About</a>
+      <a href="{{ url_for('editors_picks') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">Editor’s Picks</a>
+
+      <!-- Mobile Categories Dropdown -->
+      <div class="relative text-center ">
+        <button id="mobileCategoriesBtn" class="w-full px-4 py-2 flex justify-center items-center hover:bg-indigo-600 rounded ">
+          Categories
+          <svg id="mobileCategoriesArrow" class="w-5 h-5 rounded-sm p-px transform transition-transform duration-200 bg-indigo-300 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <ul id="mobileCategoriesMenu" class="hidden bg-indigo-400 rounded mt-1 space-y-1 ">
+          {% for category in categories %}
+          <li>
+            <a href="{{ url_for('posts_by_category', category_name=category) }}" class="block px-4 py-2 hover:bg-indigo-500 rounded">
+              {{ category }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% if not session.get('user_id') %}
+      <a href="{{ url_for('login') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">Login</a>
+      <a href="{{ url_for('signup') }}" class="block px-4 py-2 hover:bg-indigo-600 rounded">Sign Up</a>
+      {% else %}
+      <a href="{{ url_for('logout') }}" class="block px-4 py-2 hover:bg-red-400 rounded text-red-200">Logout</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  <div class="max-w-6xl mx-auto px-4 mt-6">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="mb-4 px-4 py-3 rounded-lg shadow
+      {% if category == 'success' %}bg-green-100 text-green-800
+      {% elif category == 'error' %}bg-red-100 text-red-800
+      {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Toggle Script -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Desktop categories dropdown
+    const categoriesBtn = document.getElementById('categoriesBtn');
+    const categoriesMenu = document.getElementById('categoriesMenu');
+    const categoriesArrow = document.getElementById('categoriesArrow');
+
+    categoriesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      categoriesMenu.classList.toggle('hidden');
+      categoriesArrow.classList.toggle('rotate-180');
+    });
+
+    // Mobile categories dropdown
+    const mobileCategoriesBtn = document.getElementById('mobileCategoriesBtn');
+    const mobileCategoriesMenu = document.getElementById('mobileCategoriesMenu');
+    const mobileCategoriesArrow = document.getElementById('mobileCategoriesArrow');
+
+    mobileCategoriesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileCategoriesMenu.classList.toggle('hidden');
+      mobileCategoriesArrow.classList.toggle('rotate-180');
+    });
+
+    // Close dropdowns when clicking outside
+    window.addEventListener('click', (e) => {
+      if (!categoriesBtn.contains(e.target) && !categoriesMenu.contains(e.target)) {
+        categoriesMenu.classList.add('hidden');
+        categoriesArrow.classList.remove('rotate-180');
+      }
+      if (!mobileCategoriesBtn.contains(e.target) && !mobileCategoriesMenu.contains(e.target)) {
+        mobileCategoriesMenu.classList.add('hidden');
+        mobileCategoriesArrow.classList.remove('rotate-180');
+      }
+    });
+  </script>
+
+</body>
+
+</html>

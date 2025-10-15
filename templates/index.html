@@ -1,298 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Blog</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-light"> -->
-
-<!-- Navbar  -->
-<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="{{ url_for('index') }}">My Blog</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-
-          {% if not session.get('user_id') %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
-          </li>
-          {% else %}
-          {% if session.get('role') == 'user' %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('new_post') }}">Create Post</a>
-          </li>
-          {% elif session.get('role') == 'admin' %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
-          </li>
-          {% endif %}
-          <li class="nav-item">
-            <a class="nav-link text-danger" href="{{ url_for('logout') }}">Logout</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  Flash Messages
-  <div class="container mt-3">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-  </div> -->
-
-<!-- Blog Posts -->
-<!-- <div class="container mt-4">
-    <h1 class="mb-4">Latest Posts</h1>
-    <div class="row">
-      {% for post in posts %}
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-          {% if post.image_filename %}
-          <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" class="card-img-top"
-            style="height:200px; object-fit:cover;">
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title">
-              <a href="{{ url_for('post_detail', slug=post.slug) }}" class="text-decoration-none text-dark">
-                {{ post.title }}
-              </a>
-            </h5>
-            <a href="{{ url_for('posts_by_category', category_name=post.category) }}" class="hover:underline badge bg-primary">
-            {{ post.category }}
-          </a>
-            <span class="badge bg-primary">{{ post.category }}</span>
-            <p class="card-text mt-2">
-              {{ post.content.split()[:15] | join(' ') }}...
-            </p>
-          </div>
-          <div class="card-footer text-muted">
-            {{ post.created_at.strftime('%Y-%m-%d') }}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>  -->
-<!-- ///////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////// -->
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Blog</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100 text-gray-800 font-sans"> -->
-
-<!-- Navbar -->
-<!-- <nav class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-      <a href="{{ url_for('index') }}" class="text-2xl font-bold text-white">My Blog</a>
-
-      <button id="menu-btn" class="sm:hidden text-white focus:outline-none">
-        ☰
-      </button>
-
-      <ul id="menu" class="hidden sm:flex space-x-6 text-white font-medium">
-        {% if not session.get('user_id') %}
-        <li> < Categories Dropdown -->
-<!-- <div x-data="{ open: false }" class="relative">
-            <button @click="open = !open"
-              class="px-3 py-2 rounded-md text-sm font-medium bg-gray-800 hover:bg-gray-700 flex items-center">
-              Categories
-              <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button> -->
-
-<!-- Dropdown Menu -->
-<!-- <div x-show="open" @click.away="open = false" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-              {% for category in categories %}
-              <a href="{{ url_for('posts_by_category', category_name=category) }}"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                {{ category }}
-              </a>
-              {% endfor %}
-            </div>
-          </div>
-        </li>
-        <li><a href="{{ url_for('login') }}" class="hover:text-yellow-300">Login</a></li>
-        <li><a href="{{ url_for('signup') }}" class="hover:text-yellow-300">Sign Up</a></li>
-        {% else %}
-        {% if session.get('role') == 'user' %}
-        <li><a href="{{ url_for('new_post') }}" class="hover:text-yellow-300">Create Post</a></li>
-        {% elif session.get('role') == 'admin' %}
-        <li><a href="{{ url_for('admin_dashboard') }}" class="hover:text-yellow-300">Admin Dashboard</a></li>
-        {% endif %}
-        <li><a href="{{ url_for('logout') }}" class="text-red-200 hover:text-red-400">Logout</a></li>
-        {% endif %}
-      </ul>
-    </div> -->
-
-
-
-<!-- Alpine.js CDN -->
-<!-- <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script> -->
-<!-- ########################################ends###################################### -->
-
-<!-- Mobile Menu -->
-<!-- <ul id="mobile-menu" class="sm:hidden hidden flex-col bg-indigo-700 text-white px-4 py-3 space-y-2">
-      {% if not session.get('user_id') %} -->
-<!-- <li>Categories Dropdown -->
-<!-- <div x-data="{ open: false }" class="relative">
-          <button @click="open = !open"
-            class="px-3 py-2 rounded-md text-sm font-medium bg-gray-800 hover:bg-gray-700 flex items-center">
-            Categories
-            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          <!-- Dropdown Menu -->
-<!-- <div x-show="open" @click.away="open = false" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-            {% for category in categories %}
-            <a href="{{ url_for('posts_by_category', category_name=category) }}"
-              class="block  px-0 text-center  py-2 text-white-700  bg-blue-500   hover:bg-blue-600">
-              {{ category }}
-            </a>
-            {% endfor %}
-          </div>
-        </div>
-      </li>
-      <li><a href="{{ url_for('login') }}" class="block hover:text-yellow-300 ">Login</a></li>
-      <li><a href="{{ url_for('signup') }}" class="block hover:text-yellow-300 ">Sign Up</a></li>
-      {% else %}
-      {% if session.get('role') == 'user' %}
-      <li><a href="{{ url_for('new_post') }}" class="block hover:text-yellow-300">Create Post</a></li>
-      {% elif session.get('role') == 'admin' %}
-      <li><a href="{{ url_for('admin_dashboard') }}" class="block hover:text-yellow-300">Admin Dashboard</a></li>
-      {% endif %}
-      <li><a href="{{ url_for('logout') }}" class="text-red-200 hover:text-red-400">Logout</a></li>
-      {% endif %}
-    </ul>
-  </nav> -->
-
-<!-- Flash Messages -->
-<!-- <div class="max-w-6xl mx-auto px-4 mt-6">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="mb-4 px-4 py-3 rounded-lg shadow
-                {% if category == 'success' %}bg-green-100 text-green-800
-                {% elif category == 'error' %}bg-red-100 text-red-800
-                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
-      {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-  </div> -->
-
-<!-- Blog Posts -->
-<!-- <div class="max-w-6xl mx-auto px-4 mt-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">Latest Posts</h1>
-
-   
-      <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {% for post in posts %}
-
-        <div
-          class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col">
-          {% if post.image_filename %}
-          <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
-            class="w-full h-48 object-cover">
-          {% endif %}
-
-          <div class="p-5 flex flex-col flex-1">
-            <h2 class="text-xl font-semibold mb-2">
-              <a href="{{ url_for('post_detail', slug=post.slug) }}" class="hover:text-indigo-600">
-                {{ post.title }}
-              </a>
-            </h2>
-
-            <a href="{{ url_for('posts_by_category', category_name=post.category) }}"
-              class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full mb-3">
-              {{ post.category }}
-            </a>
-
-            <p class="text-gray-600 text-sm flex-1">
-              {{ post.content.split()[:15] | join(' ') }}...
-            </p>
-
-            <button class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-2 rounded-lg share-btn"
-              data-title="{{ post.title }}" data-url="{{ url_for('post_detail', slug=post.slug, _external=True) }}">
-              Share
-            </button>
-          </div>
-
-          <div class="px-5 py-3 text-gray-500 text-xs border-t">
-            {{ post.created_at.strftime('%Y-%m-%d') }}
-          </div>
-        </div>
-
-        {% endfor %}
-
-      </div>
-   
-
-  </div>
-
-  <script>
-    document.getElementById('menu-btn').addEventListener('click', () => {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-
-    document.querySelectorAll(".share-btn").forEach(button => {
-      button.addEventListener("click", function () {
-        const title = this.dataset.title;
-        const url = this.dataset.url;
-        if (navigator.share) {
-          navigator.share({
-            title: title,
-            url: url
-          }).catch(err => console.log("Share failed:", err));
-        } else {
-          navigator.clipboard.writeText(url);
-          alert("Link copied to clipboard!");
-        }
-      });
-    });
-  </script>
-
-</body>
-
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -305,92 +10,15 @@
 
 <body class="bg-gray-100 text-gray-800 font-sans">
 
+  {% extends "base.html" %}
+  {% block content %}
+  <!-- Page content here -->
+
+
   <!-- Navbar -->
-  <nav class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-      <a href="{{ url_for('index') }}" class="text-2xl font-bold text-white">My Blog</a>
-      <button id="menu-btn" class="sm:hidden text-white focus:outline-none">☰</button>
-
-      <ul id="menu" class="hidden sm:flex space-x-6 text-white font-medium">
-        {% if not session.get('user_id') %}
-        <li><a href="{{ url_for('login') }}" class="hover:text-yellow-300">Login</a></li>
-        <li><a href="{{ url_for('signup') }}" class="hover:text-yellow-300">Sign Up</a></li>
-        {% else %}
-        {% if session.get('role') == 'user' %}
-        <li><a href="{{ url_for('new_post') }}" class="hover:text-yellow-300">Create Post</a></li>
-        {% elif session.get('role') == 'admin' %}
-        <li><a href="{{ url_for('admin_dashboard') }}" class="hover:text-yellow-300">Admin Dashboard</a></li>
-        {% endif %}
-        <li><a href="{{ url_for('logout') }}" class="text-red-200 hover:text-red-400">Logout</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Flash Messages -->
-  <div class="max-w-6xl mx-auto px-4 mt-6">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="mb-4 px-4 py-3 rounded-lg shadow
-      {% if category == 'success' %}bg-green-100 text-green-800
-      {% elif category == 'error' %}bg-red-100 text-red-800
-      {% else %}bg-yellow-100 text-yellow-800{% endif %}">
-      {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-  </div>
+ 
 
   <!-- ✅ HERO SECTION (only latest one post) -->
-  <!-- {% if posts %}
-  {% set latest_post = posts[0] %}
-  <section class="max-w-6xl mx-auto px-4 mt-10">
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row"> -->
-  <!-- Left: Image -->
-  <!-- <div class="md:w-1/2 h-72 md:h-auto relative group">
-        <a href="{{ url_for('post_detail', slug=latest_post.slug) }}">
-          {% if latest_post.image_filename %}
-          <img src="{{ url_for('static', filename='uploads/' ~ latest_post.image_filename) }}"
-            class="w-full h-full object-cover group-hover:opacity-90 transition duration-300">
-          {% else %}
-          <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
-          {% endif %}
-          Overlay Title -->
-  <!-- <div
-            class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 text-xl font-semibold">
-            {{ latest_post.title }}
-          </div>
-        </a>
-      </div> -->
-
-  <!-- Right: Description -->
-  <!-- <div class="md:w-1/2 p-6 flex flex-col justify-between">
-        
-        <div>
-          <a href="{{ url_for('posts_by_category', category_name=latest_post.category) }}"
-            class="inline-block bg-indigo-100 text-green-800 text-xs px-3 py-1 rounded-full mb-4">
-            {{ latest_post.category }}
-          </a>
-       
-
-          <p class="text-gray-700 text-base mb-6">
-            {{ latest_post.content.split()[:40] | join(' ') }}...
-          </p>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-500 text-sm">{{ latest_post.created_at.strftime('%Y-%m-%d') }}</span>
-          <a href="{{ url_for('post_detail', slug=latest_post.slug) }}"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg">
-            Read More →
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endif %} -->
-
 
   {% if posts %}
   {% set latest_post = posts[0] %}
@@ -453,58 +81,247 @@
 
 
   <!-- ✅ OTHER POSTS (Cards) -->
-  <div class="max-w-6xl mx-auto px-4 mt-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">More Posts</h2>
+ 
 
-    <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {% for post in posts[1:] %} <!-- ✅ Skip the first post -->
-      <div
-        class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col">
-        {% if post.image_filename %}
-        <a href="{{ url_for('post_detail', slug=post.slug) }}">
-          <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
-            class="w-full h-48 object-cover hover:opacity-90 transition duration-300">
-        </a>
-        {% else %}
-        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
-        {% endif %}
+  <div class="max-w-6xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 ">
 
-        <div class="p-5 flex flex-col flex-1">
-          <h3 class="text-xl font-semibold mb-2">
-            <a href="{{ url_for('post_detail', slug=post.slug) }}" class="hover:text-indigo-600">
-              {{ post.title }}
-            </a>
-          </h3>
+  
+<!-- Left: More Posts (9/12 = 3/4 width) -->
+<div class="lg:col-span-8 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+  {% set columns = 3 %}
+  {% set num_posts_to_show = columns * 2 %} <!-- 2 rows x 3 cards = 6 posts -->
 
-          <a href="{{ url_for('posts_by_category', category_name=post.category) }}"
-            class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full mb-3">
-            {{ post.category }}
-          </a>
-
-          <p class="text-gray-600 text-sm flex-1">
-            {{ post.content.split()[:15] | join(' ') }}...
-          </p>
-
-          <a href="{{ url_for('post_detail', slug=post.slug) }}"
-            class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-2 rounded-lg text-center">
-            Read More
-          </a>
-        </div>
-
-        <div class="px-5 py-3 text-gray-500 text-xs border-t">
-          {{ post.created_at.strftime('%Y-%m-%d') }}
-        </div>
+  {# ✅ Exclude the first (hero) post using slice [1:...] #}
+  {% for post in posts[1:num_posts_to_show+1] %}
+  <div
+    class="bg-white rounded-xl shadow hover:shadow-xl transform hover:-translate-y-1 transition duration-300 flex flex-col h-full">
+    <a href="{{ url_for('post_detail', slug=post.slug) }}">
+      {% if post.image_filename %}
+      <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+        class="w-full h-32 md:h-36 object-cover rounded-t-xl hover:opacity-90 transition duration-300">
+      {% else %}
+      <div class="w-full h-32 md:h-36 bg-gray-200 flex items-center justify-center text-gray-500 rounded-t-xl">
+        No Image
       </div>
+      {% endif %}
+    </a>
+
+    <div class="p-3 flex flex-col flex-1">
+      <h3 class="text-sm md:text-base font-semibold mb-1 md:mb-2 line-clamp-2">{{ post.title }}</h3>
+      <p class="text-gray-500 text-xs md:text-sm flex-1 line-clamp-3">
+        {{ post.content.split()[:15] | join(' ') }}...
+      </p>
+      <a href="{{ url_for('post_detail', slug=post.slug) }}"
+        class="mt-2 md:mt-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm px-3 py-1 md:px-4 md:py-2 rounded-lg text-center">
+        Read More
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- ✅ See More Button -->
+  {% if posts|length > num_posts_to_show + 1 %} {# +1 because hero excluded #}
+  <div class="col-span-full text-center mt-4">
+    <a href="{{ url_for('all_posts', page=1) }}"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition">
+      See More
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+
+    <!-- Right: Editor’s Picks Vertical Slider (3/12 = narrower) -->
+<div class="lg:col-span-4 flex flex-col h-[630px] border rounded-xl shadow-lg overflow-hidden relative">
+  <h3 class="text-lg font-bold text-gray-800 p-4 border-b">Top 10 Editor's Picks</h3>
+
+  <!-- Slider Buttons -->
+  <button id="editorUpBtn"
+    class="absolute top-2 right-2 z-10 bg-indigo-600 text-white p-2 rounded-full shadow hover:bg-indigo-700">↑</button>
+  <button id="editorDownBtn"
+    class="absolute bottom-2 right-2 z-10 bg-indigo-600 text-white p-2 rounded-full shadow hover:bg-indigo-700">↓</button>
+
+  <!-- Slider Container -->
+  <div id="editorSlider" class="flex-1 overflow-hidden relative">
+    <div id="editorSliderInner" class="flex flex-col">
+      {% for post in editor_picks[:10] %}
+      <a href="{{ url_for('post_detail', slug=post.slug) }}"
+        class="flex items-center gap-3 p-3 hover:bg-gray-100 border-b h-20 md:h-24 flex-shrink-0">
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+          class="w-16 h-16 md:w-20 md:h-20 object-cover rounded-md flex-shrink-0">
+        <div class="flex-1">
+          <h4 class="text-sm md:text-base font-semibold text-gray-800 line-clamp-2">{{ post.title }}</h4>
+          <p class="text-gray-500 text-xs md:text-sm">{{ post.created_at.strftime('%Y-%m-%d') }}</p>
+        </div>
+      </a>
       {% endfor %}
     </div>
   </div>
 
+  <!-- See More Button -->
+  <div class="p-4 text-center border-t">
+    <a href="{{ url_for('editors_picks', page=1) }}"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition">
+      See More
+    </a>
+  </div>
+</div>
+
+<script>
+  // Unique variables for Editor's Picks
+  const editorSliderContainer = document.getElementById('editorSlider');
+  const editorSliderInner = document.getElementById('editorSliderInner');
+  const editorUpBtn = document.getElementById('editorUpBtn');
+  const editorDownBtn = document.getElementById('editorDownBtn');
+
+  const editorCardHeight = editorSliderInner.children[0].offsetHeight;
+  const editorCards = Array.from(editorSliderInner.children);
+
+  // Clone cards for seamless scrolling
+  editorCards.forEach(card => {
+    editorSliderInner.appendChild(card.cloneNode(true));
+  });
+
+  let editorScrollPosition = 0;
+  const editorMaxScroll = editorSliderInner.scrollHeight / 2;
+
+  function editorMoveDown() {
+    editorScrollPosition += editorCardHeight;
+    if (editorScrollPosition >= editorMaxScroll) {
+      editorScrollPosition = 0;
+      editorSliderContainer.scrollTop = 0;
+    } else {
+      editorSliderContainer.scrollBy({ top: editorCardHeight, behavior: 'smooth' });
+    }
+  }
+
+  function editorMoveUp() {
+    editorScrollPosition -= editorCardHeight;
+    if (editorScrollPosition < 0) {
+      editorScrollPosition = editorMaxScroll - editorCardHeight;
+      editorSliderContainer.scrollTop = editorScrollPosition;
+    } else {
+      editorSliderContainer.scrollBy({ top: -editorCardHeight, behavior: 'smooth' });
+    }
+  }
+
+  let editorAutoScroll = setInterval(editorMoveDown, 1000);
+
+  editorDownBtn.addEventListener('click', () => {
+    editorMoveDown();
+    clearInterval(editorAutoScroll);
+    editorAutoScroll = setInterval(editorMoveDown, 1000);
+  });
+
+  editorUpBtn.addEventListener('click', () => {
+    editorMoveUp();
+    clearInterval(editorAutoScroll);
+    editorAutoScroll = setInterval(editorMoveDown, 1000);
+  });
+</script>
+
+
+
+
+
+
+  <!-- 🔥 Popular Posts -->
+
+  <section class="max-w-6xl mx-auto px-4 mt-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">Most Popular</h2>
+
+    <div class="relative">
+      <!-- Slider Buttons -->
+      <button id="prevBtn"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-indigo-600 text-white p-2 rounded-full shadow hover:bg-indigo-700">‹</button>
+      <button id="nextBtn"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-indigo-600 text-white p-2 rounded-full shadow hover:bg-indigo-700">›</button>
+
+      <!-- Slider Container -->
+      <div id="slider" class="flex gap-6 overflow-hidden">
+        {% for post in popular_posts %}
+        <!-- <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex-shrink-0 w-60"> -->
+        <div class="card bg-white rounded-xl shadow-lg transform transition-transform duration-300 flex-shrink-0 w-72 hover:scale-105 hover:shadow-2xl">
+        
+          {% if post.image_filename %}
+          <a href="{{ url_for('post_detail', slug=post.slug) }}">
+            <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+              class="w-full h-40 object-cover rounded-t-xl">
+          </a>
+          {% endif %}
+          <div class="p-4 flex flex-col justify-between h-40">
+            <h3 class="text-lg font-semibold mb-2">
+              <a href="{{ url_for('post_detail', slug=post.slug) }}" class="hover:text-indigo-600">{{ post.title }}</a>
+            </h3>
+            <p class="text-gray-500 text-sm">{{ post.views }} views</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
   <script>
-    document.getElementById('menu-btn').addEventListener('click', () => {
-      document.getElementById('menu').classList.toggle('hidden');
+    const slider = document.getElementById('slider');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const scrollAmount = 288 + 24; // width of one card + gap
+
+    // Duplicate all cards for seamless looping
+    const cards = Array.from(slider.children);
+    cards.forEach(card => {
+      const clone = card.cloneNode(true);
+      slider.appendChild(clone);
     });
+
+    let scrollPosition = 0;
+    const maxScroll = slider.scrollWidth / 2; // only original cards width
+
+    function moveNext() {
+      scrollPosition += scrollAmount;
+
+      if (scrollPosition >= maxScroll) {
+        scrollPosition = 0;
+        slider.scrollLeft = 0;
+      } else {
+        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+
+    function movePrev() {
+      scrollPosition -= scrollAmount;
+
+      if (scrollPosition < 0) {
+        scrollPosition = maxScroll - scrollAmount;
+        slider.scrollLeft = scrollPosition;
+      } else {
+        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+    }
+
+    // Automatic scroll every 3 seconds
+    let autoScroll = setInterval(moveNext, 1000);
+
+    // Buttons
+    nextBtn.addEventListener('click', () => {
+      moveNext();
+      clearInterval(autoScroll);
+      autoScroll = setInterval(moveNext, 1000);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      movePrev();
+      clearInterval(autoScroll);
+      autoScroll = setInterval(moveNext, 1000);
+    });
+
   </script>
 
+
+  <script src="script.js"></script>
+
+
+  {% endblock %}
 </body>
 
 </html>

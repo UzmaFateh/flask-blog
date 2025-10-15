@@ -32,6 +32,9 @@
 </body>
 </html> -->
 
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -103,7 +106,13 @@
     </style>
 </head>
 
+
+
+
 <body>
+    {% extends "base.html" %}
+{% block content %}
+<!-- Page content here -->
 
     <header>
         <h1>Edit Post</h1>
@@ -126,6 +135,8 @@
             <button type="submit">Update Post</button>
         </form>
     </main>
+
+    {% endblock %}
 
 </body>
 
