@@ -462,6 +462,24 @@ with app.app_context():
         db.session.add(admin)
         db.session.commit()
 
+
+    else:
+        admin = User.query.filter_by(email=admin_email).first()
+
+    # Seed a sample post if none exists
+    if not BlogPost.query.first():
+        sample_post = BlogPost(
+            user_id=admin.id,
+            title="Welcome to Your Blog!",
+            slug="welcome-to-your-blog",
+            category="Technology",
+            content="This is your first post. Edit or delete it to get started!",
+            status="Approved"
+        )
+        db.session.add(sample_post)
+        db.session.commit()
+
+
 # if __name__ == '__main__':
 #     app.run(debug=True)
 
