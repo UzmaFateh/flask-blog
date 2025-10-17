@@ -26,6 +26,12 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key')
 
 
 # print("SECRET_KEY in production =", app.config['SECRET_KEY'])
+# Limit upload size to 10 MB
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
+
+# Make sure the upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 
 
 
@@ -128,52 +134,103 @@ def generate_unique_slug(title):
 # ------------------------
 # Routes
 # ------------------------
-@app.route('/')
-def index():
-    # ✅ FIXED: Only show Approved posts on homepage
-    latest_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).limit(8).all()
-    popular_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.views.desc()).limit(5).all()
-    more_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).offset(8).limit(8).all()
-    editor_picks = BlogPost.query.filter_by(is_editors_pick=True, status='Approved').order_by(BlogPost.created_at.desc()).limit(10).all()
+# @app.route('/')
+# def index():
+#     # ✅ FIXED: Only show Approved posts on homepage
+#     latest_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).limit(8).all()
+#     popular_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.views.desc()).limit(5).all()
+#     more_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).offset(8).limit(8).all()
+#     editor_picks = BlogPost.query.filter_by(is_editors_pick=True, status='Approved').order_by(BlogPost.created_at.desc()).limit(10).all()
 
-    return render_template(
-        'index.html',
-        posts=latest_posts,
-        popular_posts=popular_posts,
-        more_posts=more_posts,
-        editor_picks=editor_picks
-    )
+#     return render_template(
+#         'index.html',
+#         posts=latest_posts,
+#         popular_posts=popular_posts,
+#         more_posts=more_posts,
+#         editor_picks=editor_picks
+#     )
 
-@app.route('/all-posts')
-def all_posts():
-    POSTS_PER_PAGE = 16
-    page = request.args.get('page', 1, type=int)
-    query = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc())
-    total_posts = query.count()
-    total_pages = (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE
-    posts = query.offset((page - 1) * POSTS_PER_PAGE).limit(POSTS_PER_PAGE).all()
-    return render_template('all_posts.html', posts=posts, page=page, total_pages=total_pages)
+# @app.route('/all-posts')
+# def all_posts():
+#     POSTS_PER_PAGE = 16
+#     page = request.args.get('page', 1, type=int)
+#     query = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc())
+#     total_posts = query.count()
+#     total_pages = (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE
+#     posts = query.offset((page - 1) * POSTS_PER_PAGE).limit(POSTS_PER_PAGE).all()
+#     return render_template('all_posts.html', posts=posts, page=page, total_pages=total_pages)
+
+# @app.route('/new', methods=['GET', 'POST'])
+# def new_post():
+#     if 'user_id' not in session:
+#         return redirect(url_for('login'))
+#     if session.get('role') != 'user':
+#         return "Only users can create posts."
+
+#     categories = ["Technology", "Health", "Travel", "Food", "Education", "Others"]
+
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         slug = generate_unique_slug(title)
+#         category = request.form['category']
+#         content = request.form['content']
+#         image = request.files['image']
+#         image_filename = None
+#         if image and image.filename != '':
+#             image_filename = secure_filename(image.filename)
+#             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+#         post = BlogPost(
+#             user_id=session['user_id'],
+#             title=title,
+#             slug=slug,
+#             category=category,
+#             content=content,
+#             image_filename=image_filename
+#         )
+#         db.session.add(post)
+#         db.session.commit()
+
+#         user_email = User.query.get(session['user_id']).email
+#         send_post_submission_email(user_email, title)
+
+#         flash('Your post has been submitted for review!', 'info')
+#         return redirect(url_for('index'))
+
+#     return render_template('new_post.html', categories=categories)
+
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
     if session.get('role') != 'user':
         return "Only users can create posts."
 
     categories = ["Technology", "Health", "Travel", "Food", "Education", "Others"]
 
     if request.method == 'POST':
-        title = request.form['title']
+        # Use .get() instead of ['key'] to avoid KeyError or hanging
+        title = request.form.get('title')
+        category = request.form.get('category')
+        content = request.form.get('content')
+        image = request.files.get('image')
+
+        if not title or not content:
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('new_post'))
+
+        # Generate slug after confirming title exists
         slug = generate_unique_slug(title)
-        category = request.form['category']
-        content = request.form['content']
-        image = request.files['image']
+
+        # Handle image upload
         image_filename = None
-        if image and image.filename != '':
+        if image and image.filename:
             image_filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
+        # Save post
         post = BlogPost(
             user_id=session['user_id'],
             title=title,
@@ -185,6 +242,7 @@ def new_post():
         db.session.add(post)
         db.session.commit()
 
+        # Send confirmation email
         user_email = User.query.get(session['user_id']).email
         send_post_submission_email(user_email, title)
 
@@ -192,6 +250,7 @@ def new_post():
         return redirect(url_for('index'))
 
     return render_template('new_post.html', categories=categories)
+
 
 
 @app.context_processor
@@ -404,6 +463,11 @@ with app.app_context():
 # if __name__ == '__main__':
 #     app.run(debug=True)
 
+
+# for render deployment
+# if __name__ == "__main__":
+#     port = int(os.environ.get("PORT", 8080))
+#     app.run(host="0.0.0.0", port=port)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
