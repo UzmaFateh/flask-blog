@@ -162,77 +162,26 @@ def generate_unique_slug(title):
 #     posts = query.offset((page - 1) * POSTS_PER_PAGE).limit(POSTS_PER_PAGE).all()
 #     return render_template('all_posts.html', posts=posts, page=page, total_pages=total_pages)
 
-@app.route('/new', methods=['GET', 'POST'])
-def new_post():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    if session.get('role') != 'user':
-        return "Only users can create posts."
-
-    categories = ["Technology", "Health", "Travel", "Food", "Education", "Others"]
-
-    if request.method == 'POST':
-        title = request.form['title']
-        slug = generate_unique_slug(title)
-        category = request.form['category']
-        content = request.form['content']
-        image = request.files['image']
-        image_filename = None
-        if image and image.filename != '':
-            image_filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
-
-        post = BlogPost(
-            user_id=session['user_id'],
-            title=title,
-            slug=slug,
-            category=category,
-            content=content,
-            image_filename=image_filename
-        )
-        db.session.add(post)
-        db.session.commit()
-
-        user_email = User.query.get(session['user_id']).email
-        send_post_submission_email(user_email, title)
-
-        flash('Your post has been submitted for review!', 'info')
-        return redirect(url_for('index'))
-
-    return render_template('new_post.html', categories=categories)
-
-
 # @app.route('/new', methods=['GET', 'POST'])
 # def new_post():
 #     if 'user_id' not in session:
 #         return redirect(url_for('login'))
-
 #     if session.get('role') != 'user':
 #         return "Only users can create posts."
 
 #     categories = ["Technology", "Health", "Travel", "Food", "Education", "Others"]
 
 #     if request.method == 'POST':
-#         # Use .get() instead of ['key'] to avoid KeyError or hanging
-#         title = request.form.get('title')
-#         category = request.form.get('category')
-#         content = request.form.get('content')
-#         image = request.files.get('image')
-
-#         if not title or not content:
-#             flash('Please fill in all required fields.', 'error')
-#             return redirect(url_for('new_post'))
-
-#         # Generate slug after confirming title exists
+#         title = request.form['title']
 #         slug = generate_unique_slug(title)
-
-#         # Handle image upload
+#         category = request.form['category']
+#         content = request.form['content']
+#         image = request.files['image']
 #         image_filename = None
-#         if image and image.filename:
+#         if image and image.filename != '':
 #             image_filename = secure_filename(image.filename)
 #             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
-#         # Save post
 #         post = BlogPost(
 #             user_id=session['user_id'],
 #             title=title,
@@ -244,7 +193,6 @@ def new_post():
 #         db.session.add(post)
 #         db.session.commit()
 
-#         # Send confirmation email
 #         user_email = User.query.get(session['user_id']).email
 #         send_post_submission_email(user_email, title)
 
@@ -252,6 +200,58 @@ def new_post():
 #         return redirect(url_for('index'))
 
 #     return render_template('new_post.html', categories=categories)
+
+
+@app.route('/new', methods=['GET', 'POST'])
+def new_post():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if session.get('role') != 'user':
+        return "Only users can create posts."
+
+    categories = ["Technology", "Health", "Travel", "Food", "Education", "Others"]
+
+    if request.method == 'POST':
+        # Use .get() instead of ['key'] to avoid KeyError or hanging
+        title = request.form.get('title')
+        category = request.form.get('category')
+        content = request.form.get('content')
+        image = request.files.get('image')
+
+        if not title or not content:
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('new_post'))
+
+        # Generate slug after confirming title exists
+        slug = generate_unique_slug(title)
+
+        # Handle image upload
+        image_filename = None
+        if image and image.filename:
+            image_filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+        # Save post
+        post = BlogPost(
+            user_id=session['user_id'],
+            title=title,
+            slug=slug,
+            category=category,
+            content=content,
+            image_filename=image_filename
+        )
+        db.session.add(post)
+        db.session.commit()
+
+        # Send confirmation email
+        user_email = User.query.get(session['user_id']).email
+        send_post_submission_email(user_email, title)
+
+        flash('Your post has been submitted for review!', 'info')
+        return redirect(url_for('index'))
+
+    return render_template('new_post.html', categories=categories)
 
 
 
