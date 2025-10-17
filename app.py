@@ -30,6 +30,8 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key')
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
 
 # Make sure the upload folder exists
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
