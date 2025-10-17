@@ -136,31 +136,31 @@ def generate_unique_slug(title):
 # ------------------------
 # Routes
 # ------------------------
-# @app.route('/')
-# def index():
-#     # ✅ FIXED: Only show Approved posts on homepage
-#     latest_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).limit(8).all()
-#     popular_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.views.desc()).limit(5).all()
-#     more_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).offset(8).limit(8).all()
-#     editor_picks = BlogPost.query.filter_by(is_editors_pick=True, status='Approved').order_by(BlogPost.created_at.desc()).limit(10).all()
+@app.route('/')
+def index():
+    # ✅ FIXED: Only show Approved posts on homepage
+    latest_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).limit(8).all()
+    popular_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.views.desc()).limit(5).all()
+    more_posts = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc()).offset(8).limit(8).all()
+    editor_picks = BlogPost.query.filter_by(is_editors_pick=True, status='Approved').order_by(BlogPost.created_at.desc()).limit(10).all()
 
-#     return render_template(
-#         'index.html',
-#         posts=latest_posts,
-#         popular_posts=popular_posts,
-#         more_posts=more_posts,
-#         editor_picks=editor_picks
-#     )
+    return render_template(
+        'index.html',
+        posts=latest_posts,
+        popular_posts=popular_posts,
+        more_posts=more_posts,
+        editor_picks=editor_picks
+    )
 
-# @app.route('/all-posts')
-# def all_posts():
-#     POSTS_PER_PAGE = 16
-#     page = request.args.get('page', 1, type=int)
-#     query = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc())
-#     total_posts = query.count()
-#     total_pages = (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE
-#     posts = query.offset((page - 1) * POSTS_PER_PAGE).limit(POSTS_PER_PAGE).all()
-#     return render_template('all_posts.html', posts=posts, page=page, total_pages=total_pages)
+@app.route('/all-posts')
+def all_posts():
+    POSTS_PER_PAGE = 16
+    page = request.args.get('page', 1, type=int)
+    query = BlogPost.query.filter_by(status='Approved').order_by(BlogPost.created_at.desc())
+    total_posts = query.count()
+    total_pages = (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE
+    posts = query.offset((page - 1) * POSTS_PER_PAGE).limit(POSTS_PER_PAGE).all()
+    return render_template('all_posts.html', posts=posts, page=page, total_pages=total_pages)
 
 # @app.route('/new', methods=['GET', 'POST'])
 # def new_post():
@@ -467,10 +467,10 @@ with app.app_context():
 
 
 # for render deployment
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 8080))
-#     app.run(host="0.0.0.0", port=port)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=8080)
 
