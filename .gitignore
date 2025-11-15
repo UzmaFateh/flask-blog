@@ -1,13 +1,24 @@
 # Ignore instance folder (contains blog.db)
 instance/
 
-# Python cache
-__pycache__/
-*.pyc
-
 # Virtual environments
 venv/
 env/
+myvenv/
 
-# Environment variables (if used later)
+
+
+# Python Cache & compiled files
+__pycache__/
+*.pyc
+
+# Database files - Production ke liye zaroori
+*.db
+*.sqlite
+
+
+# Environment Variables - Security ke liye zaroori
 .env
+
+# Logs
+*.log

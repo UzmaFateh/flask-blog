@@ -23,7 +23,7 @@
       <!-- Image -->
       {% if post.image_filename %}
       <a href="{{ url_for('post_detail', slug=post.slug) }}">
-        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+        <img src="{{ get_cloudinary_url(post.image_filename) }}"
           alt="{{ post.title }}" class="w-full h-48 object-cover rounded-t-xl hover:opacity-90 transition duration-300">
       </a>
       {% else %}

@@ -1,0 +1,2 @@
+# Yeh command apne Terminal ya Command Prompt mein chalaayein
+# Taki Cloudinary ki library Python mein install ho sake.   pip install cloudinary

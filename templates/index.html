@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Blog</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+
+
+
+
 </head>
 
 <body class="bg-gray-100 text-gray-800 font-sans">
@@ -16,7 +21,7 @@
 
 
   <!-- Navbar -->
- 
+  
 
   <!-- ✅ HERO SECTION (only latest one post) -->
 
@@ -29,7 +34,8 @@
       <div class="md:w-1/2 h-72 md:h-auto relative group">
         <a href="{{ url_for('post_detail', slug=latest_post.slug) }}">
           {% if latest_post.image_filename %}
-          <img src="{{ url_for('static', filename='uploads/' ~ latest_post.image_filename) }}"
+          {# CHANGE 1: Hero Image using Cloudinary Helper Function #}
+          <img src="{{ get_cloudinary_url(latest_post.image_filename, width=800, height=450) }}"
             class="w-full h-full object-cover group-hover:opacity-90 transition duration-300">
           {% else %}
           <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
@@ -81,7 +87,7 @@
 
 
   <!-- ✅ OTHER POSTS (Cards) -->
- 
+  
 
   <div class="max-w-6xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 ">
 
@@ -97,7 +103,8 @@
     class="bg-white rounded-xl shadow hover:shadow-xl transform hover:-translate-y-1 transition duration-300 flex flex-col h-full">
     <a href="{{ url_for('post_detail', slug=post.slug) }}">
       {% if post.image_filename %}
-      <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+      {# CHANGE 2: Post Card Image using Cloudinary Helper Function #}
+      <img src="{{ get_cloudinary_url(post.image_filename, width=400, height=200) }}"
         class="w-full h-32 md:h-36 object-cover rounded-t-xl hover:opacity-90 transition duration-300">
       {% else %}
       <div class="w-full h-32 md:h-36 bg-gray-200 flex items-center justify-center text-gray-500 rounded-t-xl">
@@ -147,7 +154,8 @@
       {% for post in editor_picks[:10] %}
       <a href="{{ url_for('post_detail', slug=post.slug) }}"
         class="flex items-center gap-3 p-3 hover:bg-gray-100 border-b h-20 md:h-24 flex-shrink-0">
-        <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+        {# CHANGE 3: Editor's Pick Thumbnail using Cloudinary Helper Function #}
+        <img src="{{ get_cloudinary_url(post.image_filename, width=80, height=80) }}"
           class="w-16 h-16 md:w-20 md:h-20 object-cover rounded-md flex-shrink-0">
         <div class="flex-1">
           <h4 class="text-sm md:text-base font-semibold text-gray-800 line-clamp-2">{{ post.title }}</h4>
@@ -174,50 +182,53 @@
   const editorUpBtn = document.getElementById('editorUpBtn');
   const editorDownBtn = document.getElementById('editorDownBtn');
 
-  const editorCardHeight = editorSliderInner.children[0].offsetHeight;
-  const editorCards = Array.from(editorSliderInner.children);
+  // Ensure elements exist before accessing properties
+  if (editorSliderInner && editorSliderInner.children.length > 0) {
+    const editorCardHeight = editorSliderInner.children[0].offsetHeight;
+    const editorCards = Array.from(editorSliderInner.children);
 
-  // Clone cards for seamless scrolling
-  editorCards.forEach(card => {
-    editorSliderInner.appendChild(card.cloneNode(true));
-  });
+    // Clone cards for seamless scrolling
+    editorCards.forEach(card => {
+      editorSliderInner.appendChild(card.cloneNode(true));
+    });
 
-  let editorScrollPosition = 0;
-  const editorMaxScroll = editorSliderInner.scrollHeight / 2;
+    let editorScrollPosition = 0;
+    const editorMaxScroll = editorSliderInner.scrollHeight / 2;
 
-  function editorMoveDown() {
-    editorScrollPosition += editorCardHeight;
-    if (editorScrollPosition >= editorMaxScroll) {
-      editorScrollPosition = 0;
-      editorSliderContainer.scrollTop = 0;
-    } else {
-      editorSliderContainer.scrollBy({ top: editorCardHeight, behavior: 'smooth' });
+    function editorMoveDown() {
+      editorScrollPosition += editorCardHeight;
+      if (editorScrollPosition >= editorMaxScroll) {
+        editorScrollPosition = 0;
+        editorSliderContainer.scrollTop = 0;
+      } else {
+        editorSliderContainer.scrollBy({ top: editorCardHeight, behavior: 'smooth' });
+      }
     }
-  }
 
-  function editorMoveUp() {
-    editorScrollPosition -= editorCardHeight;
-    if (editorScrollPosition < 0) {
-      editorScrollPosition = editorMaxScroll - editorCardHeight;
-      editorSliderContainer.scrollTop = editorScrollPosition;
-    } else {
-      editorSliderContainer.scrollBy({ top: -editorCardHeight, behavior: 'smooth' });
+    function editorMoveUp() {
+      editorScrollPosition -= editorCardHeight;
+      if (editorScrollPosition < 0) {
+        editorScrollPosition = editorMaxScroll - editorCardHeight;
+        editorSliderContainer.scrollTop = editorScrollPosition;
+      } else {
+        editorSliderContainer.scrollBy({ top: -editorCardHeight, behavior: 'smooth' });
+      }
     }
+
+    let editorAutoScroll = setInterval(editorMoveDown, 1000);
+
+    editorDownBtn.addEventListener('click', () => {
+      editorMoveDown();
+      clearInterval(editorAutoScroll);
+      editorAutoScroll = setInterval(editorMoveDown, 1000);
+    });
+
+    editorUpBtn.addEventListener('click', () => {
+      editorMoveUp();
+      clearInterval(editorAutoScroll);
+      editorAutoScroll = setInterval(editorMoveDown, 1000);
+    });
   }
-
-  let editorAutoScroll = setInterval(editorMoveDown, 1000);
-
-  editorDownBtn.addEventListener('click', () => {
-    editorMoveDown();
-    clearInterval(editorAutoScroll);
-    editorAutoScroll = setInterval(editorMoveDown, 1000);
-  });
-
-  editorUpBtn.addEventListener('click', () => {
-    editorMoveUp();
-    clearInterval(editorAutoScroll);
-    editorAutoScroll = setInterval(editorMoveDown, 1000);
-  });
 </script>
 
 
@@ -245,7 +256,8 @@
         
           {% if post.image_filename %}
           <a href="{{ url_for('post_detail', slug=post.slug) }}">
-            <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}"
+            {# CHANGE 4: Popular Post Slider Image using Cloudinary Helper Function #}
+            <img src="{{ get_cloudinary_url(post.image_filename, width=300, height=200) }}"
               class="w-full h-40 object-cover rounded-t-xl">
           </a>
           {% endif %}
@@ -265,56 +277,59 @@
     const slider = document.getElementById('slider');
     const nextBtn = document.getElementById('nextBtn');
     const prevBtn = document.getElementById('prevBtn');
-    const scrollAmount = 288 + 24; // width of one card + gap
+    // Ensure the slider and its children exist before calculating dimensions
+    if (slider && slider.children.length > 0) {
+        // Updated scroll amount calculation based on the w-72 (288px) and gap-6 (24px)
+        const scrollAmount = 288 + 24; 
 
-    // Duplicate all cards for seamless looping
-    const cards = Array.from(slider.children);
-    cards.forEach(card => {
-      const clone = card.cloneNode(true);
-      slider.appendChild(clone);
-    });
+        // Duplicate all cards for seamless looping
+        const cards = Array.from(slider.children);
+        cards.forEach(card => {
+          const clone = card.cloneNode(true);
+          slider.appendChild(clone);
+        });
 
-    let scrollPosition = 0;
-    const maxScroll = slider.scrollWidth / 2; // only original cards width
+        let scrollPosition = 0;
+        const maxScroll = slider.scrollWidth / 2; // only original cards width
 
-    function moveNext() {
-      scrollPosition += scrollAmount;
+        function moveNext() {
+          scrollPosition += scrollAmount;
 
-      if (scrollPosition >= maxScroll) {
-        scrollPosition = 0;
-        slider.scrollLeft = 0;
-      } else {
-        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
+          if (scrollPosition >= maxScroll) {
+            scrollPosition = 0;
+            slider.scrollLeft = 0;
+          } else {
+            slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+          }
+        }
+
+        function movePrev() {
+          scrollPosition -= scrollAmount;
+
+          if (scrollPosition < 0) {
+            scrollPosition = maxScroll - scrollAmount;
+            slider.scrollLeft = scrollPosition;
+          } else {
+            slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+          }
+        }
+
+        // Automatic scroll every 3 seconds
+        let autoScroll = setInterval(moveNext, 1000);
+
+        // Buttons
+        nextBtn.addEventListener('click', () => {
+          moveNext();
+          clearInterval(autoScroll);
+          autoScroll = setInterval(moveNext, 1000);
+        });
+
+        prevBtn.addEventListener('click', () => {
+          movePrev();
+          clearInterval(autoScroll);
+          autoScroll = setInterval(moveNext, 1000);
+        });
     }
-
-    function movePrev() {
-      scrollPosition -= scrollAmount;
-
-      if (scrollPosition < 0) {
-        scrollPosition = maxScroll - scrollAmount;
-        slider.scrollLeft = scrollPosition;
-      } else {
-        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      }
-    }
-
-    // Automatic scroll every 3 seconds
-    let autoScroll = setInterval(moveNext, 1000);
-
-    // Buttons
-    nextBtn.addEventListener('click', () => {
-      moveNext();
-      clearInterval(autoScroll);
-      autoScroll = setInterval(moveNext, 1000);
-    });
-
-    prevBtn.addEventListener('click', () => {
-      movePrev();
-      clearInterval(autoScroll);
-      autoScroll = setInterval(moveNext, 1000);
-    });
-
   </script>
 
 

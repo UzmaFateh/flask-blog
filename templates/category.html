@@ -15,6 +15,10 @@
             height: auto;
         }
     </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </head>
 <body>
 
@@ -32,7 +36,7 @@
             <h2><a href="{{ url_for('post_detail', slug=post.slug) }}">{{ post.title }}</a></h2>
             <p><strong>Category:</strong> {{ post.category }}</p>
             {% if post.image_filename %}
-                <img src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="{{ post.title }}">
+                <img src="{{ get_cloudinary_url(post.image_filename) }}"
             {% endif %}
             <p>{{ post.content.split()[:15] | join(' ') }}...</p>
             <hr>
